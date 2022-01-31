@@ -166,6 +166,25 @@ namespace ESReport
 				case "assign":
 					DoAssign(node);
 					break;
+				case "foreach":
+					var table = node["data"];
+
+					var data = _dataProvider(table);
+
+					foreach (var thisTableRow in data)
+					{
+						foreach (var f in thisTableRow.Keys)
+						{
+							_vars[f] = thisTableRow[f];
+						}
+
+						foreach (var item in node.Items)
+						{
+							ParseRow(item, row, thisTableRow);
+						}
+					}
+
+					break;
 			}
 		}
 

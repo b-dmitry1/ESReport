@@ -154,6 +154,25 @@ namespace ESReport
 			});
 		}
 
+		private void MarkSearchMatches(string search, IEnumerable<IPage> pages)
+		{
+			if (search.Length == 0)
+			{
+				return;
+			}
+
+			foreach (var p in pages)
+			{ 
+				foreach (var e in p.Elements)
+				{
+					if (e.Text.Contains(search))
+					{
+						e.Style.Color = Color.Yellow;
+					}
+				}
+			}
+		}
+
 		private async void timer1_Tick(object sender, EventArgs e)
 		{
 			if (!_changed)
@@ -174,6 +193,8 @@ namespace ESReport
 
 			var json = DataTextBox.Text;
 
+			var search = SearchTextBox.Text;
+
 			IEnumerable<Metafile> metafiles = new List<Metafile>();
 
 			IReport report = null;
@@ -192,6 +213,8 @@ namespace ESReport
 					var measurer = new TextMeasurer();
 
 					var pages = composer.Compose(report, measurer);
+
+					MarkSearchMatches(search, pages);
 
 					var mfr = new MetafileRenderer();
 
@@ -254,6 +277,11 @@ namespace ESReport
 		void document_BeginPrint(object sender, PrintEventArgs e)
 		{
 			_printingPage = 0;
+		}
+
+		private void SearchTextBox_TextChanged(object sender, EventArgs e)
+		{
+			_changed = true;
 		}
 	}
 }

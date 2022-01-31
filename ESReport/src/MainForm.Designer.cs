@@ -40,6 +40,8 @@
 			this.PrintButton = new System.Windows.Forms.Button();
 			this.timer1 = new System.Windows.Forms.Timer(this.components);
 			this.printDialog1 = new System.Windows.Forms.PrintDialog();
+			this.label3 = new System.Windows.Forms.Label();
+			this.SearchTextBox = new System.Windows.Forms.TextBox();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
@@ -155,6 +157,8 @@
 			// panel1
 			// 
 			this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+			this.panel1.Controls.Add(this.SearchTextBox);
+			this.panel1.Controls.Add(this.label3);
 			this.panel1.Controls.Add(this.PrintButton);
 			this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
 			this.panel1.Location = new System.Drawing.Point(0, 0);
@@ -183,6 +187,23 @@
 			// 
 			this.printDialog1.UseEXDialog = true;
 			// 
+			// label3
+			// 
+			this.label3.AutoSize = true;
+			this.label3.Location = new System.Drawing.Point(99, 10);
+			this.label3.Name = "label3";
+			this.label3.Size = new System.Drawing.Size(44, 13);
+			this.label3.TabIndex = 1;
+			this.label3.Text = "Search:";
+			// 
+			// SearchTextBox
+			// 
+			this.SearchTextBox.Location = new System.Drawing.Point(149, 6);
+			this.SearchTextBox.Name = "SearchTextBox";
+			this.SearchTextBox.Size = new System.Drawing.Size(163, 20);
+			this.SearchTextBox.TabIndex = 2;
+			this.SearchTextBox.TextChanged += new System.EventHandler(this.SearchTextBox_TextChanged);
+			// 
 			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -203,6 +224,7 @@
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
 			this.splitContainer2.ResumeLayout(false);
 			this.panel1.ResumeLayout(false);
+			this.panel1.PerformLayout();
 			this.ResumeLayout(false);
 
 		}
@@ -220,6 +242,8 @@
 		private System.Windows.Forms.Panel PreviewPanel;
 		private System.Windows.Forms.Button PrintButton;
 		private System.Windows.Forms.PrintDialog printDialog1;
+		private System.Windows.Forms.TextBox SearchTextBox;
+		private System.Windows.Forms.Label label3;
 
 
 	}

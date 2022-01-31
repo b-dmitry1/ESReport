@@ -1,0 +1,46 @@
+total = 0;
+n = 1;
+
+row h = 10
+{
+  cell w = 190, text = "Sales Report", fontsize=24;
+}
+
+row h = 5; // Empty row
+
+style frame = 1, fontsize = 16; // Change style
+
+row id = header1, align = 5, h = 8, color = PaleGreen
+{
+  cell w=10, text = "No";
+  cell w=50, text = "Name";
+  cell w=20, text = "Qty";
+  cell w=20, text = "Price";
+  cell w=20, text = "Sum";
+  cell w=20, text = "Tax";
+}
+
+foreach data = "table1"
+{
+  row header = header1, h = 8
+  {
+    sum = Qty * Price;
+    tax = sum * 0.13;
+    cell w = 10, text = "{n}";
+    cell w = 50, text = "{Name}";
+    cell w = 20, text = "{Qty}", align=6;
+    cell w = 20, text = "{Price}", align=6;
+    cell w = 20, text = "{sum:N2}", align=6;
+    cell w = 20, text = "{tax:N2}", align=6;
+    total = total + sum;
+    totaltax = totaltax + tax;
+    n = n + 1;
+  }
+}
+
+row h = 8
+{
+  cell w = 100, text = "Total:";
+  cell w = 20, text = "{total:N2}", align=6;
+  cell w = 20, text = "{totaltax:N2}", align=6;
+}

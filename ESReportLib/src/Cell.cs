@@ -46,7 +46,19 @@ namespace ESReport
 
 		public double CalcHeight(ITextMeasurer measurer)
 		{
-			var res = measurer.Measure(Text, Style.TextStyle).Height;
+			double res = measurer.Measure(Text, Style.TextStyle).Height;
+
+			double y = 0.0;
+			foreach (var row in _rows)
+			{
+				y += row.CalcHeight(measurer);
+			}
+
+			if (res < y)
+			{
+				res = y;
+			}
+
 			return res;
 		}
 

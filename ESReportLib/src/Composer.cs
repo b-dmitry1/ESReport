@@ -60,8 +60,8 @@ namespace ESReport
 				element.Style = cell.Style;
 				element.Text = cell.Text;
 				page.AddElement(element);
-				x += width;
 				Compose(page, measurer, cell, row.Style, x, Top, Height);
+				x += width;
 			}
 		}
 
@@ -70,8 +70,9 @@ namespace ESReport
 			double y = Top;
 			foreach (var row in cell.Rows)
 			{
-				var height = row.Height;
-				page.AddElement(new RenderedElement { Position = new RectangleF((float)Left, (float)y, (float)cell.Width, (float)height), Style = style });
+				var height = row.CalcHeight(measurer);
+				Compose(page, measurer, row, style, Left, y, height);
+				// page.AddElement(new RenderedElement { Position = new RectangleF((float)Left, (float)y, (float)cell.Width, (float)height), Style = style });
 				y += height;
 			}
 		}

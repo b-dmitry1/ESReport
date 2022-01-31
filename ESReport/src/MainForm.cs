@@ -141,7 +141,14 @@ namespace ESReport
 				{
 				}
 
-				var report = await markup.Parse(text, new ESReportScriptParser(), GetTable);
+				IReport report = null;
+				try
+				{
+					report = await markup.Parse(text, new ESReportScriptParser(), GetTable);
+				}
+				catch
+				{
+				}
 
 				return report;
 			});
@@ -176,24 +183,33 @@ namespace ESReport
 				report = await CreateReport(text, json);
 			});
 
-			var composer = new Composer();
-
-			var measurer = new TextMeasurer();
-
-			var pages = composer.Compose(report, measurer);
-
-			var mfr = new MetafileRenderer();
-
-			metafiles = mfr.Render(pages);
-
-			foreach (var mf in _preview.Pages)
+			try
 			{
-				mf.Dispose();
+				if (report != null)
+				{
+					var composer = new Composer();
+
+					var measurer = new TextMeasurer();
+
+					var pages = composer.Compose(report, measurer);
+
+					var mfr = new MetafileRenderer();
+
+					metafiles = mfr.Render(pages);
+
+					foreach (var mf in _preview.Pages)
+					{
+						mf.Dispose();
+					}
+
+					_preview.Pages = metafiles;
+
+					_preview.Refresh();
+				}
 			}
-
-			_preview.Pages = metafiles;
-
-			_preview.Refresh();
+			catch
+			{
+			}
 
 			_timerLocked = false;
 		}

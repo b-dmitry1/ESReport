@@ -1,10 +1,10 @@
 # ESReport
 
-Report Generator with interactive editing
+Report Generator with interactive editing. A tool you can use to print your JSON tables in a human-readable format.
 
-* Simple markup
-* No third-party components
-* Variables and simple mathematical expressions
+* Simple markup.
+* No third-party components.
+* Variables and simple mathematical expressions.
 
 
 ## Command line

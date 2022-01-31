@@ -59,7 +59,7 @@ Area: inside rows.
 
 Parameters:
 * w - width in mm. Example: w=50 // cell width of 50 mm
-* text - text inside a cell. Example="Report".
+* text - text inside a cell. Example text="Report"
 
 Example:
 
@@ -111,6 +111,6 @@ foreach data='customers' // Use "customers" table
 * align - text alignment. Encoding: 1 - top left, 2 - top center, 3 - top right, 4 - center left, 5 - center, 6 - center right, 7 - bottom left, 8 - bottom center, 9 - bottom right. Example: align=5 // center the text
 * color - cell background color. Value: standard color name. Example: color=Gold.
 * fontsize - font size in pt. Example: fontsize=28.
-* frame - cell frame. Can be 1 or 4 digit long. 1 digit defines a frame's width. 4 digits defines each frame side width. The first one defines left border, the second top, third right, and the last one bottom.
+* frame - cell frame. Can be 1 or 4 digit long. 1 digit defines a frame's width. 4 digits defines each frame side width. The first one defines left border, the second top, third right, and the last one the bottom.
 
 ![Screen shot](pictures/report1.png)

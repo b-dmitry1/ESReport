@@ -119,5 +119,4 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: Binaries
-        path: ESReport\\bin\\Release\\*.exe
-          ESReport\\bin\\Release\\*.dll
+        path: ESReport\\bin\\Release\\*

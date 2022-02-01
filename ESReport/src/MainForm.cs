@@ -17,7 +17,8 @@ namespace ESReport
 		private bool _timerLocked = false;
 		private bool _changed = true;
 		private int _printingPage = 0;
-
+		private string reportFileName = "report.txt";
+		private string dataFileName = "data.txt";
 		private Json _json = new Json();
 
 		public MainForm()
@@ -32,9 +33,6 @@ namespace ESReport
 		private void Form1_Shown(object sender, EventArgs e)
 		{
 			var cmd = Environment.GetCommandLineArgs();
-
-			var reportFileName = "report.txt";
-			var dataFileName = "data.txt";
 
 			var collapse = cmd.Length > 1;
 
@@ -126,20 +124,30 @@ namespace ESReport
 			return res;
 		}
 
-		private async Task<IReport> CreateReport(string text, string json)
+		private async Task<Json> LoadJson(string json)
 		{
 			return await Task.Run(async () =>
 			{
 				var markup = new MarkupParser();
 
-				_json = new Json();
+				var res = new Json();
 				try
 				{
-					_json.LoadJson(json);
+					res.LoadJson(json);
 				}
 				catch
 				{
 				}
+
+				return res;
+			});
+		}
+
+		private async Task<IReport> DoMarkup(string text, string json)
+		{
+			return await Task.Run(async () =>
+			{
+				var markup = new MarkupParser();
 
 				IReport report = null;
 				try
@@ -148,6 +156,7 @@ namespace ESReport
 				}
 				catch
 				{
+					throw;
 				}
 
 				return report;
@@ -161,13 +170,13 @@ namespace ESReport
 				return;
 			}
 
-			foreach (var p in pages)
+			foreach (var page in pages)
 			{ 
-				foreach (var e in p.Elements)
+				foreach (var element in page.Elements)
 				{
-					if (e.Text.Contains(search))
+					if (element.Text.Contains(search))
 					{
-						e.Style.Color = Color.Yellow;
+						element.Style.Color = Color.Yellow;
 					}
 				}
 			}
@@ -189,23 +198,31 @@ namespace ESReport
 
 			_changed = false;
 
-			var text = ReportTextBox.Text;
+			ReportMessageLabel.Text = "Updating...";
+			ReportMessageLabel.Refresh();
 
-			var json = DataTextBox.Text;
+			ReportMessageLabel.Text =
+				await makeReport(ReportTextBox.Text, DataTextBox.Text, SearchTextBox.Text);
 
-			var search = SearchTextBox.Text;
+			_preview.Refresh();
+
+			_timerLocked = false;
+		}
+
+		private async Task<string> makeReport(string text, string json, string search)
+		{
+			var result = "";
 
 			IEnumerable<Metafile> metafiles = new List<Metafile>();
 
 			IReport report = null;
 
-			await Task.Run(async () =>
-			{
-				report = await CreateReport(text, json);
-			});
-
 			try
 			{
+				_json = await LoadJson(json);
+
+				report = await DoMarkup(text, json);
+
 				if (report != null)
 				{
 					var composer = new Composer();
@@ -226,15 +243,15 @@ namespace ESReport
 					}
 
 					_preview.Pages = metafiles;
-
-					_preview.Refresh();
 				}
+				result = "OK";
 			}
-			catch
+			catch (Exception ex)
 			{
+				result = ex.Message;
 			}
 
-			_timerLocked = false;
+			return result;
 		}
 
 		private void ReportTextBox_TextChanged(object sender, EventArgs e)
@@ -244,44 +261,36 @@ namespace ESReport
 
 		private void PrintButton_Click(object sender, EventArgs e)
 		{
-			var document = new PrintDocument();
-			document.BeginPrint += document_BeginPrint;
-			document.PrintPage += document_PrintPage;
-			printDialog1.Document = document;
-			printDialog1.AllowCurrentPage = true;
-			printDialog1.AllowSomePages = true;
-			if (printDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-			{
-				document.Print();
-			}
+			new PrintCommand(_preview.Pages)
+				.Execute();
+
 			_preview.Focus();
-		}
-
-		void document_PrintPage(object sender, PrintPageEventArgs e)
-		{
-			// no linq
-			var n = 0;
-			foreach (var p in _preview.Pages)
-			{
-				if (n++ == _printingPage)
-				{
-					e.Graphics.DrawImage(p, e.PageBounds);
-				}
-			}
-
-			_printingPage++;
-
-			e.HasMorePages = _printingPage < n;
-		}
-
-		void document_BeginPrint(object sender, PrintEventArgs e)
-		{
-			_printingPage = 0;
 		}
 
 		private void SearchTextBox_TextChanged(object sender, EventArgs e)
 		{
 			_changed = true;
+		}
+
+		private void SaveReportButton_Click(object sender, EventArgs e)
+		{
+			new SaveCommand(reportFileName, ReportTextBox.Text)
+				.Execute();
+
+			_preview.Focus();
+		}
+
+		private void SaveDataButton_Click(object sender, EventArgs e)
+		{
+			new SaveCommand(dataFileName, DataTextBox.Text)
+				.Execute();
+
+			_preview.Focus();
+		}
+
+		private void ReportTextBox_KeyDown(object sender, KeyEventArgs e)
+		{
+
 		}
 	}
 }

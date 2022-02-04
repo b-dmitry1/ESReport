@@ -8,6 +8,7 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using SourceEditor;
 
 namespace ESReport
 {
@@ -16,10 +17,10 @@ namespace ESReport
 		private ReportPreview _preview;
 		private bool _timerLocked = false;
 		private bool _changed = true;
-		private int _printingPage = 0;
 		private string reportFileName = "report.txt";
 		private string dataFileName = "data.txt";
 		private Json _json = new Json();
+		private SourceEditor.SourceEditor _editor;
 
 		public MainForm()
 		{
@@ -28,6 +29,21 @@ namespace ESReport
 			_preview = new ReportPreview();
 			_preview.Parent = PreviewPanel;
 			_preview.Dock = DockStyle.Fill;
+
+			_editor = new SourceEditor.SourceEditor();
+			_editor.Parent = splitContainer1.Panel1;
+			_editor.Dock = DockStyle.Fill;
+
+			_editor.Keywords = new string[] { "row", "cell", "style", "foreach" };
+			_editor.Identifiers = new string[] { "text", "w", "h", "fontsize", "id", "align", "color", "data", "header", "frame" };
+
+			_editor.TextChanged += _editor_TextChanged;
+
+		}
+
+		void _editor_TextChanged(object sender, EventArgs e)
+		{
+			_changed = true;
 		}
 
 		private void Form1_Shown(object sender, EventArgs e)
@@ -72,16 +88,8 @@ namespace ESReport
 
 			if (File.Exists(reportFileName))
 			{
-				ReportTextBox.Text = File.ReadAllText(reportFileName);
+				_editor.LoadFromFile(reportFileName);
 			}
-
-			if (File.Exists(dataFileName))
-			{
-				DataTextBox.Text = File.ReadAllText(dataFileName);
-			}
-
-			ReportTextBox.MouseWheel += ReportTextBox_MouseWheel;
-			DataTextBox.MouseWheel += ReportTextBox_MouseWheel;
 
 			_preview.Focus();
 
@@ -126,7 +134,7 @@ namespace ESReport
 
 		private async Task<Json> LoadJson(string json)
 		{
-			return await Task.Run(async () =>
+			return await Task.Run(() =>
 			{
 				var markup = new MarkupParser();
 
@@ -198,11 +206,19 @@ namespace ESReport
 
 			_changed = false;
 
-			ReportMessageLabel.Text = "Updating...";
-			ReportMessageLabel.Refresh();
+			var data = "";
+			if (File.Exists(dataFileName))
+			{
+				try
+				{
+					data = File.ReadAllText(dataFileName);
+				}
+				catch
+				{ 
+				}
+			}
 
-			ReportMessageLabel.Text =
-				await makeReport(ReportTextBox.Text, DataTextBox.Text, SearchTextBox.Text);
+			await makeReport(_editor.Text, data, SearchTextBox.Text);
 
 			_preview.Refresh();
 
@@ -274,15 +290,7 @@ namespace ESReport
 
 		private void SaveReportButton_Click(object sender, EventArgs e)
 		{
-			new SaveCommand(reportFileName, ReportTextBox.Text)
-				.Execute();
-
-			_preview.Focus();
-		}
-
-		private void SaveDataButton_Click(object sender, EventArgs e)
-		{
-			new SaveCommand(dataFileName, DataTextBox.Text)
+			new SaveCommand(reportFileName, _editor.Lines)
 				.Execute();
 
 			_preview.Focus();

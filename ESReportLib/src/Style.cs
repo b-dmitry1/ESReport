@@ -18,6 +18,22 @@ namespace ESReport
 		ITextStyle Clone();
 	}
 
+	public struct Margins
+	{
+		public double Left;
+		public double Right;
+		public double Top;
+		public double Bottom;
+
+		public Margins(double value = 0.0f)
+		{
+			Left = value;
+			Right = value;
+			Top = value;
+			Bottom = value;
+		}
+	}
+
 	public struct Padding
 	{
 		public double Left;

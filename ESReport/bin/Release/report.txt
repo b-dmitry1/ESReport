@@ -1,0 +1,89 @@
+row h = 10
+{
+  cell w = 190, text = "Sales Report", fontsize=24;
+}
+
+row h = 5; // Empty row
+
+style frame = 1, fontsize = 16; // Change style
+
+row id = header1, align = 5, h = 8, color = PaleGreen
+{
+  cell w=10, text = "No";
+  cell w=50, text = "Name";
+  cell w=20, text = "Qty";
+  cell w=20, text = "Price";
+  cell w=20, text = "Sum";
+  cell w=20, text = "Tax";
+}
+
+foreach data = "table1"
+{
+  row header = header1, h = 8
+  {
+    n = n + 1;
+    sum = Qty * Price;
+    tax = sum * 0.13;
+    cell w = 10, text = "{n}";
+    cell w = 50, text = "{Name}";
+    cell w = 20, text = "{Qty}", align=6;
+    cell w = 20, text = "{Price}", align=6;
+    cell w = 20, text = "{sum:N2}", align=6;
+    cell w = 20, text = "{tax:N2}", align=6;
+    total = total + sum;
+    totaltax = totaltax + tax;
+  }
+}
+
+row h = 8
+{
+  cell w = 100, text = "Total:";
+  cell w = 20, text = "{total:N2}", align=6;
+  cell w = 20, text = "{totaltax:N2}", align=6;
+}
+
+row h=15, frame=0
+{
+  cell w=100, text="Sold:", align=7;
+}
+
+row h=8
+{
+  foreach data="table1"
+  {
+    cell w=30 align=5
+    {
+      row h=8
+      {
+        cell w=30, text="{Name}";
+      }
+      row h=8
+      {
+        cell w=30, text="{Qty}";
+      }
+    }
+  }
+}
+
+row h=15, frame=0
+{
+  cell w=100 text="Totals:" align=7;
+}
+
+row h=5
+{
+  cell w=40, text="Department";
+  cell w=100
+  {
+    row h=8
+    {
+      cell w=40, text="Total:";
+      cell w=60, text="{total:N2}";
+    }
+    row h=8
+    {
+      cell w=40, text="Total tax:";
+      cell w=60, text="{totaltax:N2}";
+    }
+  }
+}

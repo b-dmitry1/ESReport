@@ -14,9 +14,9 @@ namespace ESReport
 	public class SaveCommand : ICommand
 	{
 		private string _fileName;
-		private string _content;
+		private IEnumerable<string> _content;
 
-		public SaveCommand(string fileName, string content)
+		public SaveCommand(string fileName, IEnumerable<string> content)
 		{
 			_fileName = fileName;
 			_content = content;
@@ -26,7 +26,7 @@ namespace ESReport
 		{
 			try
 			{
-				File.WriteAllText(_fileName, _content);
+				File.WriteAllLines(_fileName, _content);
 			}
 			catch (Exception ex)
 			{

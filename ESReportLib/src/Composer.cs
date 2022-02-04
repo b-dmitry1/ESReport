@@ -22,20 +22,20 @@ namespace ESReport
 				var page = new Page(report.Paper);
 				pages.Add(page);
 
-				var x = page.Paper.LeftMargin;
-				var y = page.Paper.TopMargin;
+				var x = page.Paper.Margins.Left;
+				var y = page.Paper.Margins.Top;
 
 				foreach (var row in report.Rows)
 				{
 					var height = row.CalcHeight(measurer);
 
-					if (y + height > page.Paper.Height - page.Paper.BottomMargin)
+					if (y + height > page.Paper.Height - page.Paper.Margins.Bottom || row.PageBreak)
 					{
 						page = new Page(report.Paper);
 						pages.Add(page);
 
-						x = page.Paper.LeftMargin;
-						y = page.Paper.TopMargin;
+						x = page.Paper.Margins.Left;
+						y = page.Paper.Margins.Top;
 					}
 
 					Compose(page, measurer, row, style, x, y, height);

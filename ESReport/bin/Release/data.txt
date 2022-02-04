@@ -1,0 +1,19 @@
+{
+  "table1": [
+    {
+      "Name": "Cookies",
+      "Qty": "2",
+      "Price": "1,80"
+    },
+    {
+      "Name": "Tomato",
+      "Qty": "8",
+      "Price": "0,30"
+    },
+    {
+      "Name": "Orange",
+      "Qty": "9",
+      "Price": "0,50"
+    }
+  ]
+}

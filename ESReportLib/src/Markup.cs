@@ -97,7 +97,7 @@ namespace ESReport
 			return res;
 		}
 
-		private void ParseCell(IReportScriptElement node, IReportBase elem, IDictionary<string, string> tableRow)
+		private void parseCell(IReportScriptElement node, IReportBase elem, IDictionary<string, string> tableRow)
 		{
 			IRow row;
 
@@ -108,9 +108,14 @@ namespace ESReport
 
 					row.Style = readStyle(node, elem.Style);
 
+					if (node.Attributes.ContainsKey("newpage"))
+					{
+						row.PageBreak = true;
+					}
+
 					foreach (var item in node.Items)
 					{
-						ParseRow(item, row, tableRow);
+						parseRow(item, row, tableRow);
 					}
 
 					break;
@@ -131,18 +136,18 @@ namespace ESReport
 
 						foreach (var item in node.Items)
 						{
-							ParseCell(item, elem, thisTableRow);
+							parseCell(item, elem, thisTableRow);
 						}
 					}
 
 					break;
 				case "assign":
-					DoAssign(node);
+					doAssign(node);
 					break;
 			}
 		}
 
-		private void ParseRow(IReportScriptElement node, IRow row, IDictionary<string, string> tableRow)
+		private void parseRow(IReportScriptElement node, IRow row, IDictionary<string, string> tableRow)
 		{
 			switch (node.Name)
 			{
@@ -151,7 +156,7 @@ namespace ESReport
 
 					var s = node["text"];
 
-					s = InsertVariables(s);
+					s = insertVariables(s);
 
 					cell.Text = s;
 
@@ -159,12 +164,12 @@ namespace ESReport
 
 					foreach (var subitem in node.Items)
 					{
-						ParseCell(subitem, cell, tableRow);
+						parseCell(subitem, cell, tableRow);
 					}
 
 					break;
 				case "assign":
-					DoAssign(node);
+					doAssign(node);
 					break;
 				case "foreach":
 					var table = node["data"];
@@ -180,7 +185,7 @@ namespace ESReport
 
 						foreach (var item in node.Items)
 						{
-							ParseRow(item, row, thisTableRow);
+							parseRow(item, row, thisTableRow);
 						}
 					}
 
@@ -188,7 +193,7 @@ namespace ESReport
 			}
 		}
 
-		private string InsertVariables(string s)
+		private string insertVariables(string s)
 		{
 			foreach (var v in _vars.Keys)
 			{
@@ -211,7 +216,7 @@ namespace ESReport
 			return s;
 		}
 
-		private void DoAssign(IReportScriptElement node)
+		private void doAssign(IReportScriptElement node)
 		{
 			double v1, v2;
 
@@ -274,11 +279,21 @@ namespace ESReport
 
 				foreach (var element in tree.Items)
 				{
-					ParseCell(element, report, new Dictionary<string, string>());
+					parseGlobal(report, element);
 				}
 
 				return report;
 			});
+		}
+
+		private void parseGlobal(IReport report, IReportScriptElement element)
+		{
+			switch (element.Name)
+			{ 
+				default:
+					parseCell(element, report, new Dictionary<string, string>());
+					break;
+			}
 		}
 	}
 }

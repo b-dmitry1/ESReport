@@ -60,6 +60,7 @@ namespace ESReport
 
 						y += (int)(page.Height * _zoom) + 8;
 					}
+					g.FillRectangle(new SolidBrush(Color.FromArgb(16, Color.Black)), ClientRectangle);
 				}
 
 				e.Graphics.DrawImageUnscaled(bmp, 0, 0);

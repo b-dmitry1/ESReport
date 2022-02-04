@@ -8,7 +8,9 @@ namespace ESReport
 		double Height { get; set; }
 		IEnumerable<ICell> Cells { get; }
 		ICellStyle Style { get; set; }
-		string Data { get; set; }
+		bool PageBreak { get; set; }
+		double NewPageWidth { get; set; }
+		double NewPageHeight { get; set; }
 
 		ICell AddCell(double width);
 		double CalcHeight(ITextMeasurer measurer);
@@ -18,7 +20,7 @@ namespace ESReport
 	{
 		private List<ICell> _cells = new List<ICell>();
 
-		public string Data { get; set; }
+		public bool PageBreak { get; set; }
 
 		private ICellStyle _style;
 		public ICellStyle Style
@@ -40,6 +42,9 @@ namespace ESReport
 			get { return _alignment; }
 			set { _alignment = value; }
 		}
+
+		public double NewPageWidth { get; set; }
+		public double NewPageHeight { get; set; }
 
 		public IEnumerable<ICell> Cells
 		{

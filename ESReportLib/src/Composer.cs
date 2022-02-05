@@ -72,7 +72,6 @@ namespace ESReport
 			{
 				var height = row.CalcHeight(measurer);
 				Compose(page, measurer, row, style, Left, y, height);
-				// page.AddElement(new RenderedElement { Position = new RectangleF((float)Left, (float)y, (float)cell.Width, (float)height), Style = style });
 				y += height;
 			}
 		}

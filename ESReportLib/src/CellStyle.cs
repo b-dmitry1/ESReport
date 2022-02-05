@@ -9,6 +9,7 @@ namespace ESReport
 		int Alignment { get; set; }
 		string Frame { get; set; }
 		Color Color { get; set; }
+		Margins Margins { get; set; }
 
 		ICellStyle Clone();
 	}
@@ -43,6 +44,13 @@ namespace ESReport
 			set { _color = value; }
 		}
 
+		private Margins _margins;
+		public Margins Margins
+		{
+			get { return _margins; }
+			set { _margins = value; }
+		}
+
 		public ICellStyle Clone()
 		{
 			return new CellStyle
@@ -50,7 +58,8 @@ namespace ESReport
 				_alignment = this._alignment,
 				_textStyle = this._textStyle.Clone(),
 				_frame = this._frame,
-				_color = this._color
+				_color = this._color,
+				_margins = this._margins
 			};
 		}
 	}

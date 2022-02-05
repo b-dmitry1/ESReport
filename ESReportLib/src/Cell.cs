@@ -46,7 +46,7 @@ namespace ESReport
 
 		public double CalcHeight(ITextMeasurer measurer)
 		{
-			double res = measurer.Measure(Text, Style.TextStyle).Height;
+			double res = measurer.Measure(Text, Style.TextStyle, _width - _style.Margins.Left - _style.Margins.Right).Height;
 
 			double y = 0.0;
 			foreach (var row in _rows)
@@ -59,7 +59,7 @@ namespace ESReport
 				res = y;
 			}
 
-			return res;
+			return _style.Margins.Top + res + _style.Margins.Bottom;
 		}
 
 		public ICellStyle Style

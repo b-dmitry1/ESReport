@@ -112,5 +112,7 @@ foreach data='customers' // Use "customers" table
 * color - cell background color. Value: standard color name. Example: color=Gold.
 * fontsize - font size in pt. Example: fontsize=28.
 * frame - cell frame. Can be 1 or 4 digit long. 1 digit defines a frame's width. 4 digits defines each frame side width. The first one defines left border, the second top, third right, and the last one the bottom.
+* margins - cell margins in mm. Example: cell margins=5.
+* leftmargin, topmargin, rightmargin, bottommargin - cell margins in mm (individual). Example: cell leftmargin=5.
 
 ![Screen shot](pictures/report1.png)

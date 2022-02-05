@@ -44,6 +44,31 @@ namespace ESReport
 				res.Color = Color.FromName(node["color"]);
 			}
 
+			if (node.Attributes.ContainsKey("margins"))
+			{
+				res.Margins = new Margins(node.GetDouble("margins"));
+			}
+
+			if (node.Attributes.ContainsKey("leftmargin"))
+			{
+				res.Margins = new Margins(node.GetDouble("leftmargin"), res.Margins.Top, res.Margins.Right, res.Margins.Bottom);
+			}
+
+			if (node.Attributes.ContainsKey("topmargin"))
+			{
+				res.Margins = new Margins(res.Margins.Left, node.GetDouble("topmargin"), res.Margins.Right, res.Margins.Bottom);
+			}
+
+			if (node.Attributes.ContainsKey("rightmargin"))
+			{
+				res.Margins = new Margins(res.Margins.Left, res.Margins.Top, node.GetDouble("rightmargin"), res.Margins.Bottom);
+			}
+
+			if (node.Attributes.ContainsKey("bottommargin"))
+			{
+				res.Margins = new Margins(res.Margins.Left, res.Margins.Top, res.Margins.Right, node.GetDouble("bottommargin"));
+			}
+
 			return res;
 		}
 

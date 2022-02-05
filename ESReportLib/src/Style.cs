@@ -32,6 +32,22 @@ namespace ESReport
 			Top = value;
 			Bottom = value;
 		}
+
+		public Margins(double left, double top, double right, double bottom)
+		{
+			Left = left;
+			Top = top;
+			Right = right;
+			Bottom = bottom;
+		}
+
+		public void Set(double? left = null, double? top = null, double? right = null, double? bottom = null)
+		{
+			if (left.HasValue) Left = left.Value;
+			if (top.HasValue) Top = top.Value;
+			if (right.HasValue) Right = right.Value;
+			if (bottom.HasValue) Bottom = bottom.Value;
+		}
 	}
 
 	public struct Padding

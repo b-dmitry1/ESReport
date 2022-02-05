@@ -102,66 +102,54 @@ namespace ESReport
 							}
 						}
 
-						var lines = e.Text.Split('\n');
-
-						var size = g.MeasureString(e.Text, e.Style.TextStyle.GetFont());
+						var sf = new StringFormat();
 
 						switch (e.Style.Alignment)
 						{
+							case 0:
+							case 1:
+							case 4:
+							case 7:
+								sf.Alignment = StringAlignment.Near;
+								break;
 							case 2:
 							case 5:
 							case 8:
-								x = x + w / 2;
+								sf.Alignment = StringAlignment.Center;
 								break;
 							case 3:
 							case 6:
 							case 9:
-								x = x + w;
+								sf.Alignment = StringAlignment.Far;
 								break;
 						}
 
 						switch (e.Style.Alignment)
 						{
+							case 0:
+							case 1:
+							case 2:
+							case 3:
+								sf.LineAlignment = StringAlignment.Near;
+								break;
 							case 4:
 							case 5:
 							case 6:
-								y = y + h / 2 - size.Height / 2;
+								sf.LineAlignment = StringAlignment.Center;
 								break;
 							case 7:
 							case 8:
 							case 9:
-								y = y + h - size.Height;
+								sf.LineAlignment = StringAlignment.Far;
 								break;
 						}
 
-						var dy = y;
+						x += (float)(e.Style.Margins.Left * 4.0);
+						y += (float)(e.Style.Margins.Top * 4.0);
+						w -= (float)((e.Style.Margins.Left + e.Style.Margins.Right) * 4.0);
+						h -= (float)((e.Style.Margins.Top + e.Style.Margins.Bottom) * 4.0);
 
-						foreach (var line in lines)
-						{
-							var sz = g.MeasureString(line.Length == 0 ? "A" : line, e.Style.TextStyle.GetFont());
-
-							switch (e.Style.Alignment)
-							{ 
-								case 0:
-								case 1:
-								case 4:
-								case 7:
-									g.DrawString(e.Text, e.Style.TextStyle.GetFont(), Brushes.Black, x, y);
-									break;
-								case 2:
-								case 5:
-								case 8:
-									g.DrawString(e.Text, e.Style.TextStyle.GetFont(), Brushes.Black, x - sz.Width / 2, y);
-									break;
-								case 3:
-								case 6:
-								case 9:
-									g.DrawString(e.Text, e.Style.TextStyle.GetFont(), Brushes.Black, x - sz.Width, y);
-									break;
-							}
-
-							y += sz.Height;
-						}
+						g.DrawString(e.Text, e.Style.TextStyle.GetFont(), Brushes.Black, new RectangleF(x, y, w, h), sf);
 					}
 				}
 				return res;

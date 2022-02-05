@@ -23,7 +23,6 @@ namespace ESReport
 
 		public SizeF Measure(string text, ITextStyle style, double fitWidth)
 		{
-			var res = new SizeF((float)fitWidth, 0.0f);
 			SizeF sz;
 
 			if (_graphics == null)
@@ -31,7 +30,7 @@ namespace ESReport
 				_graphics = Graphics.FromImage(_bitmap);
 			}
 
-			sz = _graphics.MeasureString(text.Length > 0 ? text : "A", new Font("Arial", 10.0f));
+			sz = _graphics.MeasureString(text.Length > 0 ? text : "A", style.GetFont(), (int)Math.Floor(fitWidth * 4.0f));
 
 			sz.Width = (float)Math.Round(sz.Width, 2);
 			sz.Height = (float)Math.Round(sz.Height, 2);

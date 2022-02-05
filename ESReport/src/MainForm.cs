@@ -31,11 +31,13 @@ namespace ESReport
 			_preview.Dock = DockStyle.Fill;
 
 			_editor = new SourceEditor.SourceEditor();
-			_editor.Parent = splitContainer1.Panel1;
+			_editor.Parent = SourcePanel;
 			_editor.Dock = DockStyle.Fill;
 
 			_editor.Keywords = new string[] { "row", "cell", "style", "foreach" };
-			_editor.Identifiers = new string[] { "text", "w", "h", "fontsize", "id", "align", "color", "data", "header", "frame" };
+			_editor.Identifiers = new string[] { "text", "w", "h", "fontsize", "id",
+				"align", "color", "data", "header", "frame",
+				"margins", "leftmargin", "topmargin", "rightmargin", "bottommargin" };
 
 			_editor.TextChanged += _editor_TextChanged;
 
@@ -288,17 +290,12 @@ namespace ESReport
 			_changed = true;
 		}
 
-		private void SaveReportButton_Click(object sender, EventArgs e)
+		private void button1_Click(object sender, EventArgs e)
 		{
 			new SaveCommand(reportFileName, _editor.Lines)
 				.Execute();
 
 			_preview.Focus();
-		}
-
-		private void ReportTextBox_KeyDown(object sender, KeyEventArgs e)
-		{
-
 		}
 	}
 }

@@ -115,4 +115,11 @@ foreach data='customers' // Use "customers" table
 * margins - cell margins in mm. Example: cell margins=5.
 * leftmargin, topmargin, rightmargin, bottommargin - cell margins in mm (individual). Example: cell leftmargin=5.
 
+ 
+
 ![Screen shot](pictures/report1.png)
+
+
+ 
+
+![Scheme](pictures/schematic.png)

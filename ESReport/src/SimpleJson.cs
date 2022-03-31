@@ -178,7 +178,14 @@ public class Json
 			var num = isNumber;
 			if (!num)
 				s.Append("\"");
-			s.Append(val);
+			s.Append(val
+				.Replace("\\", "\\\\")
+				.Replace("\"", "\\\"")
+				.Replace("\t", "\\t")
+				.Replace("\n", "\\n")
+				.Replace("\r", "\\r")
+				.Replace("\b", "\\b")
+				);
 			if (!num)
 				s.Append("\"");
 		}
@@ -270,10 +277,20 @@ public class Json
 					token = ch.ToString();
 					return TokenType.Colon;
 				case '\"':
+					var spec = false;
 					for (; pos < text.Length; pos++)
 					{
 						ch = text[pos];
-						if (ch == '\"')
+						if (spec)
+						{
+							spec = false;
+						}
+						else if (ch == '\\')
+						{
+							spec = true;
+							continue;
+						}
+						else if (ch == '\"')
 						{
 							pos++;
 							break;
@@ -282,6 +299,20 @@ public class Json
 					}
 					token = tok.ToString();
 					return TokenType.String;
+			}
+
+			var neg = false;
+			if (ch == '-')
+			{
+				neg = true;
+
+				if (pos >= text.Length)
+				{
+					token = "";
+					return TokenType.Eof;
+				}
+
+				ch = text[pos++];
 			}
 
 			if ((ch >= '0') && (ch <= '9'))
@@ -295,6 +326,10 @@ public class Json
 					ch = text[++pos];
 				}
 				token = tok.ToString();
+				if (neg)
+				{
+					token = "-" + token;
+				}
 				return TokenType.String;
 			}
 
@@ -320,6 +355,9 @@ public class Json
 						v.Items.Add(newvar);
 						parseObject(newvar);
 						break;
+					case TokenType.CloseBracket:
+						done = true;
+						continue;
 					default:
 						throw new Exception("Unexpected symbol found while reading an array \"" + v.Name + "\"");
 				}
@@ -358,6 +396,9 @@ public class Json
 						expecting(TokenType.Colon);
 						parseValue(newvar);
 						break;
+					case TokenType.CloseCur:
+						done = true;
+						continue;
 					default:
 						throw new Exception("Cannot find object name");
 				}
